@@ -40,7 +40,7 @@ resource "aws_security_group" "web_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["49.15.89.66/32"]
+    cidr_blocks = [var.allowed_ssh_cidr]
   }
 
   ingress {
@@ -65,8 +65,8 @@ resource "aws_key_pair" "deployer" {
 }
 
 resource "aws_instance" "web" {
-  ami                         = "ami-0c7632fb77f35db43"
-  instance_type               = "t3.micro"
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
   subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   key_name                    = aws_key_pair.deployer.key_name
